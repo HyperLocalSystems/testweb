@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <!-- <link rel='stylesheet' type='text/css' media='screen' href='main.css'> -->
+    <script src='main.js'></script>
+</head>
+<body>
+<!-- items page -->
+<p id="addr">Address: </p>
+<p id="latlong">Lat long: </p>
+<h3>Shops nearby this area</h3>
+<p id="list">loading..</p>
+</body>
+<script>
+    var addr, latlong;
+    window.onload = function () {
+        // run code
+        latlong = document.getElementById("latlong");
+        addr = document.getElementById("addr");
+        if (!localStorage.getItem("uaddress")) {
+            window.location.replace("/");
+        }
+
+        addr.innerHTML = "Address: " + localStorage.getItem("uaddress");
+        latlong.innerHTML = "Latlong: " + localStorage.getItem("ulatlong");
+        // getLocation();
+        var url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRK-wIBu43BV34blb9zwUnpoACA3bnPrs5CZ4ih8_XxRWObCntInS71fD91vJunxp0GXAMIzMvLfQKo/pub?output=csv";
+        console.log(url);
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.onreadystatechange = function () {
+            console.log("Something came");
+            
+
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                var data = xhr.responseText;
+                // var lines = data.split("\n");
+                var list = document.getElementById("list");
+                var arrdata = parseCSV(data);
+                console.log(arrdata);
+                var text = "";
+                for (var i = 1; i < arrdata.length; i++) {
+                    var item = arrdata[i];
+                    text += "<br>" + '<a href="shop.html#'+item[3]+'">'+item[1]+'</a>';
+                }
+                list.innerHTML = text;
+
+                // list.innerHTML = 
+            }
+        }
+        xhr.send();
+    }
+</script>

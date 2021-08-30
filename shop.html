@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <!-- <link rel='stylesheet' type='text/css' media='screen' href='main.css'> -->
+    <script src='main.js'></script>
+</head>
+
+<body>
+    <a href="home.html">Back to home</a>
+    <p id="title">loading...</p>
+    <p id="list">loading..</p>
+
+    
+</body>
+<script>
+    var url = window.location.href;
+    ls = url.split("#");
+
+    var fetchurl0 = "https://docs.google.com/spreadsheets/d/e/" + ls[1] + "/pub?output=csv&gid=";
+    var fetchurl1 = fetchurl0 + "0";
+    var fetchurl2 = fetchurl0 + "1929481706";
+    console.log(fetchurl1);
+    var xhr0 = new XMLHttpRequest();
+    xhr0.open("GET", fetchurl1, true);
+    xhr0.onreadystatechange = function () {
+        console.log("Something came here as well");
+        if (xhr0.readyState == 4 && xhr0.status == 200) {
+            var data0 = xhr0.responseText;
+            console.log(data0);
+            // var lines = data.split("\n");
+            var list0 = document.getElementById("title");
+            var arrdata0 = parseCSV(data0);
+            console.log(arrdata0);
+            var text = "";
+            list0.innerHTML = "<b>Shop name: "+    arrdata0[2][1]+"</b><br>Address: "+arrdata0[4][1]+"<br>Phone: "+arrdata0[5][1];
+            // list.innerHTML = 
+        }
+    }
+    xhr0.send();
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", fetchurl2, true);
+    xhr.onreadystatechange = function () {
+        console.log("Something came");
+
+
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            var data = xhr.responseText;
+            // var lines = data.split("\n");
+            var list = document.getElementById("list");
+            var arrdata = parseCSV(data);
+            console.log(arrdata);
+            var text = "Item    : Price<br>";
+            for (var i = 1; i < arrdata.length; i++) {
+                var item = arrdata[i];
+                text += "<br>" + item[1] + ": " + item[3]+' <a href="#">Add</a>';
+            }
+            list.innerHTML = text;
+
+            // list.innerHTML = 
+        }
+    }
+    xhr.send();
+</script>
+
+</html>
